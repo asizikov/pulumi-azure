@@ -1,0 +1,3 @@
+name: infra
+runtime: dotnet
+description: Azure infrastructure for Xcc training
