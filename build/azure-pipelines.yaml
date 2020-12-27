@@ -1,0 +1,37 @@
+name: 'Echo Function CI-CD Pipeline $(Date:yyyyMMdd)-$(Rev:rr)'
+
+trigger: 
+  - main
+
+pool:
+ vmImage: 'ubuntu-20.04'
+
+variables:
+  - group: 'AccessTokens'
+  - name: stackName
+    value: 'asizikov/infra/dev'
+
+stages:
+    - stage: infrastructure
+      displayName: 'Prepare Azure infrastructure'
+      jobs:
+          - job: Infrastructure
+            steps:
+                - checkout: self
+                  displayName: 'Checkout code'
+                  fetchDepth: 1
+                - task: Pulumi@1
+                  displayName: 'Pulumi preview'
+                  inputs:
+                    azureSubscription: 'Service connection for Pulumi'
+                    command: 'preview'
+                    cwd: 'infra/'
+                    stack: '$(stackName)'
+                - task: Pulumi@1
+                  displayName: 'Pulumi up'
+                  inputs:
+                    azureSubscription: 'Service connection for Pulumi'
+                    command: 'up'
+                    args: '--yes'
+                    cwd: 'infra/'
+                    stack: '$(stackName)'
