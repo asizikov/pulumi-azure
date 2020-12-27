@@ -8,6 +8,8 @@ pool:
 
 variables:
   - group: 'AccessTokens'
+  - name: stackName
+    value: 'asizikov/infra/dev'
 
 stages:
     - stage: infrastructure
@@ -24,4 +26,12 @@ stages:
                     azureSubscription: 'Service connection for Pulumi'
                     command: 'preview'
                     cwd: 'infra/'
-                    stack: 'asizikov/infra/dev'
+                    stack: '$(stackName)'
+                - task: Pulumi@1
+                  displayName: 'Pulumi up'
+                  inputs:
+                    azureSubscription: 'Service connection for Pulumi'
+                    command: 'up'
+                    args: '--yes'
+                    cwd: 'infra/'
+                    stack: '$(stackName)'
