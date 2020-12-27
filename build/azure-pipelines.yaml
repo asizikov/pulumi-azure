@@ -84,7 +84,7 @@ stages:
                 displayName: 'Run Unit Tests'
                 inputs:
                   command: 'test' 
-                  arguments: " --filter 'FullyQualifiedName!~ApiTests'"
+                  arguments: '--filter "FullyQualifiedName!~ApiTests"'
 
     - stage: deploy_function_app
       displayName: 'Deploy Azure Function'
