@@ -73,6 +73,17 @@ stages:
                 - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
                   displayName: 'Publish Artifact'
                   artifact: drop
+          - job: Test
+            displayName: 'Run Unit Tests'
+            steps:
+              - checkout: self
+                displayName: 'Checkout code'
+                fetchDepth: 1
+              - task: DotNetCoreCLI@2
+                displayName: 'Run Unit Tests'
+                inputs:
+                  command: 'test' 
+                  arguments: " --filter 'FullyQualifiedName!~ApiTests'"
 
     - stage: deploy_function_app
       displayName: 'Deploy Azure Function'
