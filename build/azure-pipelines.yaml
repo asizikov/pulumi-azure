@@ -6,6 +6,9 @@ trigger:
 pool:
  vmImage: 'ubuntu-20.04'
 
+variables:
+  - group: 'AccessTokens'
+
 stages:
     - stage: infrastructure
       displayName: 'Prepare Azure infrastructure'
