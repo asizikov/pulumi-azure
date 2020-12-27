@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using Pulumi;
 using Pulumi.Azure.AppService;
 using Pulumi.Azure.AppService.Inputs;
@@ -65,7 +66,7 @@ class TrainingStack : Stack
         FunctionStatingSlotName = stagingSlot.Name;
         AppServicePlanId = app.AppServicePlanId;
         FunctionAppName = app.Name;
-        
+        StagingSlotUri = stagingSlot.DefaultHostname;
     }
 
     [Output]
@@ -76,4 +77,7 @@ class TrainingStack : Stack
 
     [Output]
     public Output<string> FunctionStatingSlotName { get; set; }
+    
+    [Output]
+    public Output<string> StagingSlotUri { get; set; }
 }
