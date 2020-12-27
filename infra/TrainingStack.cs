@@ -1,7 +1,8 @@
 using Pulumi;
+using Pulumi.Azure.AppService;
+using Pulumi.Azure.AppService.Inputs;
 using Pulumi.Azure.Core;
-using Pulumi.Azure.Network;
-using Pulumi.Azure.Network.Inputs;
+using Pulumi.Azure.Storage;
 
 // ReSharper disable once CheckNamespace
 class TrainingStack : Stack
@@ -12,26 +13,36 @@ class TrainingStack : Stack
         var suffix = config.Get("suffix");
 
         var resourceGroup = new ResourceGroup("rg-pulumi-training");
-        var virtualNetwork = new VirtualNetwork($"vnet-{suffix}-main", new VirtualNetworkArgs
+
+        var plan = new Plan("service-plan-dynamic", new PlanArgs
         {
             ResourceGroupName = resourceGroup.Name,
-            AddressSpaces = new InputList<string>
+            Kind = "FunctionApp",
+            Sku = new PlanSkuArgs
             {
-                "10.1.0.0/16"
-            },
-            Subnets = new InputList<VirtualNetworkSubnetArgs>
-            {
-                new VirtualNetworkSubnetArgs
-                {
-                    AddressPrefix = "10.1.0.0/20",
-                    Name = "frontend"
-                }
+                Tier = "Dynamic",
+                Size = "Y1"
             }
         });
-        VNetId = virtualNetwork.Id;
+
+        var storageAccount = new Account("saechofunction", new AccountArgs
+        {
+            ResourceGroupName = resourceGroup.Name,
+            AccountReplicationType = "LRS",
+            AccountTier = "Standard",
+            AccountKind = "StorageV2"
+        });
         
+        var app = new FunctionApp($"{suffix}-function-app", new FunctionAppArgs
+        {
+            ResourceGroupName = resourceGroup.Name,
+            AppServicePlanId = plan.Id,
+            StorageAccountName = storageAccount.Name,
+            StorageAccountAccessKey = storageAccount.PrimaryAccessKey
+        });
+        AppServicePlanId = app.AppServicePlanId;
     }
 
     [Output]
-    public Output<string> VNetId { get; set; }
+    public Output<string> AppServicePlanId { get; set; }
 }
