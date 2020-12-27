@@ -11,7 +11,7 @@ namespace EchoFunction.ApiTests
         public async Task FunctionReturnsOk()
         {
             var httpClient = new HttpClient();
-            var baseUri = Environment.GetEnvironmentVariable("StagingSlotUri");
+            var baseUri = Environment.GetEnvironmentVariable("STAGINGSLOTURI");
             var responseMessage = await httpClient.GetAsync(new Uri($"https://{baseUri}/api/Echo"));
             Assert.True(responseMessage.IsSuccessStatusCode);
         }
