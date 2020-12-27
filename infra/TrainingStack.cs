@@ -41,8 +41,12 @@ class TrainingStack : Stack
             StorageAccountAccessKey = storageAccount.PrimaryAccessKey
         });
         AppServicePlanId = app.AppServicePlanId;
+        FunctionAppName = app.Name;
     }
 
     [Output]
     public Output<string> AppServicePlanId { get; set; }
+    
+    [Output]
+    public  Output<string> FunctionAppName { get; set; }
 }
