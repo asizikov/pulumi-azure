@@ -95,6 +95,6 @@ stages:
                     inputs:
                       azureSubscription: 'Service connection for Pulumi'
                       appType: 'functionApp'
-                      appName: 'xcc-function-app4cd4478a'
+                      appName: '$(azureFunctionAppName)'
                       package: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
                       deploymentMethod: 'auto'
