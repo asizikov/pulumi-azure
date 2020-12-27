@@ -47,14 +47,20 @@ class TrainingStack : Stack
             }
         });
 
-        var stagingSlot = new FunctionAppSlot("stating", new FunctionAppSlotArgs
+        var stagingSlot = new FunctionAppSlot("staging", new FunctionAppSlotArgs
         {
+            Name = "staging",
             ResourceGroupName = resourceGroup.Name,
             AppServicePlanId = plan.Id,
             StorageAccountName = storageAccount.Name,
             StorageAccountAccessKey = storageAccount.PrimaryAccessKey,
             FunctionAppName = app.Name,
-            Version = "~3"
+            Version = "~3",
+            SiteConfig = new FunctionAppSlotSiteConfigArgs
+            {
+                Http2Enabled = true,
+                ScmType = "VSTSRM"
+            }
         });
 
         AppServicePlanId = app.AppServicePlanId;
