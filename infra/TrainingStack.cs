@@ -39,10 +39,25 @@ class TrainingStack : Stack
             AppServicePlanId = plan.Id,
             StorageAccountName = storageAccount.Name,
             StorageAccountAccessKey = storageAccount.PrimaryAccessKey,
+            Version = "~3",
+            HttpsOnly = true,
+            
+        });
+
+        var stagingSlot = new FunctionAppSlot("stating", new FunctionAppSlotArgs
+        {
+            ResourceGroupName = resourceGroup.Name,
+            AppServicePlanId = plan.Id,
+            StorageAccountName = storageAccount.Name,
+            StorageAccountAccessKey = storageAccount.PrimaryAccessKey,
+            FunctionAppName = app.Name,
+            HttpsOnly = true,
             Version = "~3"
         });
+
         AppServicePlanId = app.AppServicePlanId;
         FunctionAppName = app.Name;
+        FunctionStatingSlotName = stagingSlot.Name;
     }
 
     [Output]
@@ -50,4 +65,7 @@ class TrainingStack : Stack
     
     [Output]
     public  Output<string> FunctionAppName { get; set; }
+
+    [Output]
+    public Output<string> FunctionStatingSlotName { get; set; }
 }
