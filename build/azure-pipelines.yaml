@@ -10,9 +10,13 @@ variables:
   - group: 'AccessTokens'
   - name: stackName
     value: 'asizikov/infra/dev'
+  - name: buildConfiguration
+    value: 'Release'
+  - name: appWorkingDir
+    value: '$(System.DefaultWorkingDirectory)/src/EchoFunction'
 
 stages:
-    - stage: infrastructure
+    - stage: update_infrastructure
       displayName: 'Prepare Azure infrastructure'
       jobs:
           - job: Infrastructure
@@ -35,3 +39,55 @@ stages:
                     args: '--yes'
                     cwd: 'infra/'
                     stack: '$(stackName)'
+
+    - stage: build_application
+      displayName: 'Build and Pack Azure Function App'
+      dependsOn: []
+      jobs:
+          - job: Build
+            steps:
+                - checkout: self
+                  displayName: 'Checkout code'
+                  fetchDepth: 1
+
+                - task: DotNetCoreCLI@2
+                  displayName: 'Build Azure Function'
+                  inputs:
+                    command: 'build'
+                    projects: '$(appWorkingDir)/*.csproj'
+                    arguments: '--output $(System.DefaultWorkingDirectory)/publish_output --configuration $(buildConfiguration)'
+                - task: ArchiveFiles@2
+                  displayName: 'Archive files'
+                  inputs:
+                    rootFolderOrFile: '$(System.DefaultWorkingDirectory)/publish_output'
+                    includeRootFolder: false
+                    archiveType: zip
+                    archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+                    replaceExistingArchive: true
+
+                - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+                  displayName: 'Publish Artifact'
+                  artifact: drop
+
+    - stage: deploy_function_app
+      displayName: 'Deploy Azure Function'
+      dependsOn: 
+        - update_infrastructure
+        - build_application
+      condition: succeeded()
+      jobs:
+        - deployment: Deploy
+          displayName: "Deploy Azure Function"
+          environment: 'development'
+
+          strategy:
+            runOnce:
+              deploy:
+                steps:
+                  - task: AzureFunctionApp@1
+                    inputs:
+                      azureSubscription: 'Service connection for Pulumi'
+                      appType: 'functionApp'
+                      appName: 'xcc-function-app4cd4478a'
+                      package: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
+                      deploymentMethod: 'auto'
