@@ -40,8 +40,6 @@ class TrainingStack : Stack
             StorageAccountName = storageAccount.Name,
             StorageAccountAccessKey = storageAccount.PrimaryAccessKey,
             Version = "~3",
-            HttpsOnly = true,
-            
         });
 
         var stagingSlot = new FunctionAppSlot("stating", new FunctionAppSlotArgs
@@ -51,7 +49,6 @@ class TrainingStack : Stack
             StorageAccountName = storageAccount.Name,
             StorageAccountAccessKey = storageAccount.PrimaryAccessKey,
             FunctionAppName = app.Name,
-            HttpsOnly = true,
             Version = "~3"
         });
 
