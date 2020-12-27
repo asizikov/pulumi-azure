@@ -41,7 +41,7 @@ stages:
                     stack: '$(stackName)'
 
                 - script: |
-                    echo "##vso[task.setvariable variable=FunctionAppName;isOutput=true]$(pulumi stack output FunctionAppName)"
+                    echo "##vso[task.setvariable variable=FunctionAppName;isOutput=true]$(pulumi stack output --cwd 'infra/' FunctionAppName)"
                     displayName: 'Set stack outputs as variables'
                   name: 'pulumi'
 
