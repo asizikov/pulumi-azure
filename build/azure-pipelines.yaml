@@ -23,5 +23,5 @@ stages:
                   inputs:
                     azureSubscription: 'Service connection for Pulumi'
                     command: 'preview'
-                    cwd: '/infra'
+                    cwd: 'infra/'
                     stack: 'asizikov/infra/dev'
