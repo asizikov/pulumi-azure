@@ -49,7 +49,7 @@ class TrainingStack : Stack
 
         var stagingSlot = new FunctionAppSlot("staging", new FunctionAppSlotArgs
         {
-            Name = "staging",
+            Name = "staging", // do not let Pulumi append random suffix
             ResourceGroupName = resourceGroup.Name,
             AppServicePlanId = plan.Id,
             StorageAccountName = storageAccount.Name,
@@ -62,10 +62,10 @@ class TrainingStack : Stack
                 ScmType = "VSTSRM"
             }
         });
-
+        FunctionStatingSlotName = stagingSlot.Name;
         AppServicePlanId = app.AppServicePlanId;
         FunctionAppName = app.Name;
-        FunctionStatingSlotName = stagingSlot.Name;
+        
     }
 
     [Output]
