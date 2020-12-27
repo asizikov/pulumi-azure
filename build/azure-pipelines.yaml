@@ -16,7 +16,7 @@ variables:
     value: '$(System.DefaultWorkingDirectory)/src/EchoFunction'
 
 stages:
-    - stage: infrastructure
+    - stage: update_infrastructure
       displayName: 'Prepare Azure infrastructure'
       jobs:
           - job: Infrastructure
@@ -68,3 +68,26 @@ stages:
                 - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
                   displayName: 'Publish Artifact'
                   artifact: drop
+
+    - stage: deploy_function_app
+      displayName: 'Deploy Azure Function'
+      dependsOn: 
+        - update_infrastructure
+        - build_application
+      condition: succeeded()
+      jobs:
+        - deployment: Deploy
+          displayName: "Deploy Azure Function"
+          environment: 'development'
+
+          strategy:
+            runOnce:
+              deploy:
+                steps:
+                  - task: AzureFunctionApp@1
+                    inputs:
+                      azureSubscription: 'Service connection for Pulumi'
+                      appType: 'functionApp'
+                      appName: 'xcc-function-app4cd4478a'
+                      package: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
+                      deploymentMethod: 'auto'
