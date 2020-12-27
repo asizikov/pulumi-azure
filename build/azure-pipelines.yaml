@@ -42,6 +42,7 @@ stages:
 
     - stage: build_application
       displayName: 'Build and Pack Azure Function App'
+      dependsOn: []
       jobs:
           - job: Build
             steps:
@@ -55,3 +56,15 @@ stages:
                     command: 'build'
                     projects: '$(appWorkingDir)/*.csproj'
                     arguments: '--output $(System.DefaultWorkingDirectory)/publish_output --configuration $(buildConfiguration)'
+                - task: ArchiveFiles@2
+                  displayName: 'Archive files'
+                  inputs:
+                    rootFolderOrFile: '$(System.DefaultWorkingDirectory)/publish_output'
+                    includeRootFolder: false
+                    archiveType: zip
+                    archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+                    replaceExistingArchive: true
+
+                - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+                  displayName: 'Publish Artifact'
+                  artifact: drop
