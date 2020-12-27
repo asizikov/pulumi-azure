@@ -10,6 +10,10 @@ variables:
   - group: 'AccessTokens'
   - name: stackName
     value: 'asizikov/infra/dev'
+  - name: buildConfiguration
+    value: 'Release'
+  - name: appWorkingDir
+    value: '$(System.DefaultWorkingDirectory)/src/EchoFunction'
 
 stages:
     - stage: infrastructure
@@ -35,3 +39,19 @@ stages:
                     args: '--yes'
                     cwd: 'infra/'
                     stack: '$(stackName)'
+
+    - stage: build_application
+      displayName: 'Build and Pack Azure Function App'
+      jobs:
+          - job: Build
+            steps:
+                - checkout: self
+                  displayName: 'Checkout code'
+                  fetchDepth: 1
+
+                - task: DotNetCoreCLI@2
+                  displayName: 'Build Azure Function'
+                  inputs:
+                    command: 'build'
+                    projects: '$(appWorkingDir)/*.csproj'
+                    arguments: '--output $(System.DefaultWorkingDirectory)/publish_output --configuration $(buildConfiguration)'
