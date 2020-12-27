@@ -80,7 +80,7 @@ stages:
         - update_infrastructure
         - build_application
       variables:
-       azureFunctionAppName: $[ stageDependencies.update_infrastructure.outputs['pulumi.FunctionAppName'] ]
+       azureFunctionAppName: $[ stageDependencies.update_infrastructure.Infrastructure.outputs['pulumi.FunctionAppName'] ]
       condition: succeeded()
       jobs:
         - deployment: Deploy
