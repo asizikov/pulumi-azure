@@ -40,6 +40,11 @@ class TrainingStack : Stack
             StorageAccountName = storageAccount.Name,
             StorageAccountAccessKey = storageAccount.PrimaryAccessKey,
             Version = "~3",
+            SiteConfig = new FunctionAppSiteConfigArgs
+            {
+                Http2Enabled = true,
+                ScmType = "VSTSRM"
+            }
         });
 
         var stagingSlot = new FunctionAppSlot("stating", new FunctionAppSlotArgs
