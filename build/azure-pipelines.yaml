@@ -1,0 +1,17 @@
+name: 'Echo Function CI/CD Pipeline $(Date:yyyyMMdd)-$(Rev:rr)'
+
+trigger: 
+  - main
+
+pool:
+ vmImage: 'ubuntu-20.04'
+
+stages:
+    - stage: infrastructure
+      displayName: 'Prepare Azure infrastructure'
+      jobs:
+          - job: Infrastructure
+            steps:
+                - checkout: self
+                  displayName: 'Checkout code'
+                  fetchDepth: 1
