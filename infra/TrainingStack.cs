@@ -38,7 +38,8 @@ class TrainingStack : Stack
             ResourceGroupName = resourceGroup.Name,
             AppServicePlanId = plan.Id,
             StorageAccountName = storageAccount.Name,
-            StorageAccountAccessKey = storageAccount.PrimaryAccessKey
+            StorageAccountAccessKey = storageAccount.PrimaryAccessKey,
+            Version = "~3"
         });
         AppServicePlanId = app.AppServicePlanId;
         FunctionAppName = app.Name;
