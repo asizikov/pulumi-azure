@@ -40,6 +40,11 @@ stages:
                     cwd: 'infra/'
                     stack: '$(stackName)'
 
+                - script: |
+                    echo "##vso[task.setvariable variable=FunctionAppName;isOutput=true]$(pulumi stack output FunctionAppName)"
+                    displayName: 'Set stack outputs as variables'
+                  name: 'pulumi'
+
     - stage: build_application
       displayName: 'Build and Pack Azure Function App'
       dependsOn: []
@@ -74,6 +79,8 @@ stages:
       dependsOn: 
         - update_infrastructure
         - build_application
+      variables:
+       azureFunctionAppName: $[ stageDependencies.update_infrastructure.outputs['pulumi.FunctionAppName'] ]
       condition: succeeded()
       jobs:
         - deployment: Deploy
