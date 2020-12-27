@@ -18,3 +18,10 @@ stages:
                 - checkout: self
                   displayName: 'Checkout code'
                   fetchDepth: 1
+                - task: Pulumi@1
+                  displayName: 'Pulumi preview'
+                  inputs:
+                    azureSubscription: 'Service connection for Pulumi'
+                    command: 'preview'
+                    cwd: '/infra'
+                    stack: 'asizikov/infra/dev'
