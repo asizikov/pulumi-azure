@@ -118,7 +118,9 @@ stages:
     
     - stage: verify_staging_app
       displayName: 'Run API tests'
-      dependsOn: deploy_function_app
+      dependsOn: 
+        - deploy_function_app
+        - update_infrastructure
       variables:
         stagingSlotUri: $[ stageDependencies.update_infrastructure.Infrastructure.outputs['pulumi.StagingSlotUri'] ]
       jobs:
@@ -133,3 +135,23 @@ stages:
                 inputs:
                   command: 'test' 
                   arguments: '--filter "FullyQualifiedName~ApiTests"'
+
+    - stage: go_to_production
+      displayName: 'Swap Staging Slot'
+      dependsOn: 
+        - verify_staging_app
+        - update_infrastructure
+      variables:
+        stagingSlotUri: $[ stageDependencies.update_infrastructure.Infrastructure.outputs['pulumi.StagingSlotUri'] ]
+        azureFunctionAppName: $[ stageDependencies.update_infrastructure.Infrastructure.outputs['pulumi.FunctionAppName'] ]
+        stagingSlotName: $[ stageDependencies.update_infrastructure.Infrastructure.outputs['pulumi.FunctionStatingSlotName'] ]
+      jobs:
+        - job: swap
+          steps:
+            - task: AzureAppServiceManage@0
+              inputs:
+                azureSubscription: 'Service connection for Pulumi'
+                Action: 'Swap Slots'
+                WebAppName: '$(azureFunctionAppName)'
+                ResourceGroupName: 'rg-pulumi-training6fb83c8a'
+                SourceSlot: '$(stagingSlotName)'
