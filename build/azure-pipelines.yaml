@@ -42,6 +42,7 @@ stages:
 
                 - script: |
                     echo "##vso[task.setvariable variable=FunctionAppName;isOutput=true]$(pulumi stack output --cwd 'infra/' FunctionAppName)"
+                    echo "##vso[task.setvariable variable=FunctionStatingSlotName;isOutput=true]$(pulumi stack output --cwd 'infra/' FunctionStatingSlotName)"
                     echo "##vso[task.setvariable variable=StagingSlotUri;isOutput=true]$(pulumi stack output --cwd 'infra/' StagingSlotUri)"
                   displayName: 'Set stack outputs as variables'
                   name: 'pulumi'
@@ -87,12 +88,13 @@ stages:
                   arguments: '--filter "FullyQualifiedName!~ApiTests"'
 
     - stage: deploy_function_app
-      displayName: 'Deploy Azure Function'
+      displayName: 'Deploy Azure Function to Staging'
       dependsOn: 
         - update_infrastructure
         - build_application
       variables:
        azureFunctionAppName: $[ stageDependencies.update_infrastructure.Infrastructure.outputs['pulumi.FunctionAppName'] ]
+       stagingSlotName: $[ stageDependencies.update_infrastructure.Infrastructure.outputs['pulumi.FunctionStatingSlotName'] ]
       condition: succeeded()
       jobs:
         - deployment: Deploy
@@ -109,4 +111,25 @@ stages:
                       appType: 'functionApp'
                       appName: '$(azureFunctionAppName)'
                       package: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
+                      resourceGroupName: 'rg-pulumi-training6fb83c8a'
+                      slotName: '$(stagingSlotName)'
+                      deployToSlotOrASE: true
                       deploymentMethod: 'auto'
+    
+    - stage: verify_staging_app
+      displayName: 'Run API tests'
+      dependsOn: deploy_function_app
+      variables:
+        stagingSlotUri: $[ stageDependencies.update_infrastructure.Infrastructure.outputs['pulumi.StagingSlotUri'] ]
+      jobs:
+          - job: Api_Test
+            displayName: 'Run API Tests'
+            steps:
+              - checkout: self
+                displayName: 'Checkout code'
+                fetchDepth: 1
+              - task: DotNetCoreCLI@2
+                displayName: 'Run Unit Tests'
+                inputs:
+                  command: 'test' 
+                  arguments: '--filter "FullyQualifiedName~ApiTests"'
