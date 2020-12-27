@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30621.155
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B87FBB83-F8C0-47AD-BA69-40E1476C9AE5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "infra", "infra\infra.csproj", "{099D6B4D-5EFC-4740-9E18-13263CFCD08B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EchoFunction", "src\EchoFunction\EchoFunction.csproj", "{CCE37C4F-9F3B-4AE4-AE30-23A3D86463A2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NewFolder1", "NewFolder1", "{FC57A7E4-9A80-4D15-B4C4-7A821E163C99}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{099D6B4D-5EFC-4740-9E18-13263CFCD08B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{099D6B4D-5EFC-4740-9E18-13263CFCD08B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{099D6B4D-5EFC-4740-9E18-13263CFCD08B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{099D6B4D-5EFC-4740-9E18-13263CFCD08B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCE37C4F-9F3B-4AE4-AE30-23A3D86463A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCE37C4F-9F3B-4AE4-AE30-23A3D86463A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCE37C4F-9F3B-4AE4-AE30-23A3D86463A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCE37C4F-9F3B-4AE4-AE30-23A3D86463A2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CCE37C4F-9F3B-4AE4-AE30-23A3D86463A2} = {B87FBB83-F8C0-47AD-BA69-40E1476C9AE5}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E3977F91-E407-477A-9783-42C0AAF025DD}
+	EndGlobalSection
+EndGlobal
