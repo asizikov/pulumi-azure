@@ -45,6 +45,7 @@ stages:
                     echo "##vso[task.setvariable variable=FunctionAppName;isOutput=true]$(pulumi stack output --cwd 'infra/' FunctionAppName)"
                     echo "##vso[task.setvariable variable=FunctionStatingSlotName;isOutput=true]$(pulumi stack output --cwd 'infra/' FunctionStatingSlotName)"
                     echo "##vso[task.setvariable variable=StagingSlotUri;isOutput=true]$(pulumi stack output --cwd 'infra/' StagingSlotUri)"
+                    echo "##vso[task.setvariable variable=ResourceGroupName;isOutput=true]$(pulumi stack output --cwd 'infra/' ResourceGroupName)"
                   displayName: 'Set stack outputs as variables'
                   name: 'pulumi'
 
@@ -96,6 +97,7 @@ stages:
       variables:
        azureFunctionAppName: $[ stageDependencies.update_infrastructure.Infrastructure.outputs['pulumi.FunctionAppName'] ]
        stagingSlotName: $[ stageDependencies.update_infrastructure.Infrastructure.outputs['pulumi.FunctionStatingSlotName'] ]
+       resourceGroupName: $[ stageDependencies.update_infrastructure.Infrastructure.outputs['pulumi.ResourceGroupName'] ]
       condition: succeeded()
       jobs:
         - deployment: Deploy
@@ -112,7 +114,7 @@ stages:
                       appType: 'functionApp'
                       appName: '$(azureFunctionAppName)'
                       package: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
-                      resourceGroupName: 'rg-pulumi-training6fb83c8a'
+                      resourceGroupName: '$(resourceGroupName)'
                       slotName: '$(stagingSlotName)'
                       deployToSlotOrASE: true
                       deploymentMethod: 'auto'

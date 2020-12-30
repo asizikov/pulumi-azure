@@ -63,11 +63,17 @@ class TrainingStack : Stack
                 ScmType = "VSTSRM"
             }
         });
+        
+        //init outputs
+        ResourceGroupName = resourceGroup.Name;
         FunctionStatingSlotName = stagingSlot.Name;
         AppServicePlanId = app.AppServicePlanId;
         FunctionAppName = app.Name;
         StagingSlotUri = stagingSlot.DefaultHostname;
     }
+    
+    [Output]
+    public Output<string> ResourceGroupName { get; set; }
 
     [Output]
     public Output<string> AppServicePlanId { get; set; }
