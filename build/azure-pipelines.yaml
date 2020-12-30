@@ -25,10 +25,16 @@ stages:
                 - checkout: self
                   displayName: 'Checkout code'
                   fetchDepth: 1
-                - script: |
-                    echo '$(Build.SourceBranch)'
-                    BRANCH_NAME=$(echo "$(Build.SourceBranch)" | awk -F/ '{print $NF}')
-                    echo '$(BRANCH_NAME)'
+                - task: PowerShell@2
+                  inputs:
+                    targetType: 'inline'
+                    script: |
+                      # Write your PowerShell commands here.
+                      
+                      $branchSource = "$(Build.SourceBranch)"
+                      $branchSourcePath = $branchSource -replace "refs/heads/", ""
+                      Write-Host $branchSourcePath
+                    errorActionPreference: 'continue'
                   displayName: 'Set up stack for feature branch'
                   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/feature'))
                 - task: Pulumi@1
