@@ -30,9 +30,10 @@ stages:
                     targetType: 'inline'
                     script: |
                       $branchSource = "$(Build.SourceBranch)"
-                      $branchSourcePath = $branchSource -replace "refs/heads/", ""
-                      $branchSourcePath = $branchSourcePath -replace "/", "-"
-                      Write-Host $branchSourcePath
+                      $tmpStackName = $branchSource -replace "refs/heads/", ""
+                      $tmpStackName = $tmpStackName -replace "/", "-"
+                      Write-Host $tmpStackName
+                      Write-Host "##vso[task.setvariable variable=tmpStackName;]$tmpStackName"
                     errorActionPreference: 'continue'
                   displayName: 'Set up stack for feature branch'
                   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/feature'))
