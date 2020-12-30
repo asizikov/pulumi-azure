@@ -29,10 +29,9 @@ stages:
                   inputs:
                     targetType: 'inline'
                     script: |
-                      # Write your PowerShell commands here.
-                      
                       $branchSource = "$(Build.SourceBranch)"
                       $branchSourcePath = $branchSource -replace "refs/heads/", ""
+                      $branchSourcePath = $branchSourcePath -replace "/", "-"
                       Write-Host $branchSourcePath
                     errorActionPreference: 'continue'
                   displayName: 'Set up stack for feature branch'
