@@ -148,6 +148,7 @@ stages:
         stagingSlotUri: $[ stageDependencies.update_infrastructure.Infrastructure.outputs['pulumi.StagingSlotUri'] ]
         azureFunctionAppName: $[ stageDependencies.update_infrastructure.Infrastructure.outputs['pulumi.FunctionAppName'] ]
         stagingSlotName: $[ stageDependencies.update_infrastructure.Infrastructure.outputs['pulumi.FunctionStatingSlotName'] ]
+        resourceGroupName: $[ stageDependencies.update_infrastructure.Infrastructure.outputs['pulumi.ResourceGroupName'] ]
       jobs:
         - job: swap
           steps:
@@ -156,5 +157,5 @@ stages:
                 azureSubscription: 'Service connection for Pulumi'
                 Action: 'Swap Slots'
                 WebAppName: '$(azureFunctionAppName)'
-                ResourceGroupName: 'rg-pulumi-training6fb83c8a'
+                ResourceGroupName: '$(resourceGroupName)'
                 SourceSlot: '$(stagingSlotName)'
