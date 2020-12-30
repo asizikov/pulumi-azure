@@ -9,8 +9,6 @@ pool:
 
 variables:
   - group: 'AccessTokens'
-  - name: stackName
-    value: 'asizikov/infra/feature'
   - name: buildConfiguration
     value: 'Release'
   - name: appWorkingDir
@@ -21,6 +19,8 @@ stages:
       displayName: 'Prepare Azure infrastructure'
       jobs:
           - job: Infrastructure
+            variables:
+              stackName: 'asizikov/infra/feature'
             steps:
                 - checkout: self
                   displayName: 'Checkout code'
