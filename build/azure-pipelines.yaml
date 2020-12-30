@@ -25,6 +25,9 @@ stages:
                 - checkout: self
                   displayName: 'Checkout code'
                   fetchDepth: 1
+                - bash: echo '$(Build.SourceBranch)''
+                  displayName: 'Set up stack for feature branch'
+                  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/feature'))
                 - task: Pulumi@1
                   displayName: 'Pulumi preview'
                   inputs:
