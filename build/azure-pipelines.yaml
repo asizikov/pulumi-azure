@@ -27,7 +27,7 @@ stages:
                   fetchDepth: 1
                 - script: |
                     echo '$(Build.SourceBranch)'
-                    BRANCH_NAME=$(echo "$(System.PullRequest.TargetBranch)" | awk -F/ '{print $NF}')
+                    BRANCH_NAME=$(echo "$(Build.SourceBranch)" | awk -F/ '{print $NF}')
                     echo '$(BRANCH_NAME)'
                   displayName: 'Set up stack for feature branch'
                   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/feature'))
