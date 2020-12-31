@@ -12,7 +12,9 @@ namespace EchoFunction.ApiTests
         {
             var httpClient = new HttpClient();
             var baseUri = Environment.GetEnvironmentVariable("STAGINGSLOTURI");
-            var responseMessage = await httpClient.GetAsync(new Uri($"https://{baseUri}/api/Echo"));
+            var requestUri = new Uri($"https://{baseUri}/api/Echo");
+            Console.WriteLine($"Calling {requestUri.ToString()}");
+            var responseMessage = await httpClient.GetAsync(requestUri);
             Assert.True(responseMessage.IsSuccessStatusCode);
         }
     }
