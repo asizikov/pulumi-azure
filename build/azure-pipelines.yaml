@@ -33,7 +33,6 @@ stages:
                       $tmpStackName = $branchSource -replace "refs/heads/", ""
                       $tmpStackName = $tmpStackName -replace "/", "-"
                       $tmpStackName = "asizikov/infra/" + $tmpStackName
-                      $tmpStackName = "feature"
                       Write-Host $tmpStackName
                       Write-Host "##vso[task.setvariable variable=stackName;]$tmpStackName"
                     errorActionPreference: 'continue'
