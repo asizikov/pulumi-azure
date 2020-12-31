@@ -2,14 +2,13 @@ name: 'Echo Function CI-CD Pipeline $(Date:yyyyMMdd)-$(Rev:rr)'
 
 trigger: 
   - main
+  - feature/*
 
 pool:
  vmImage: 'ubuntu-20.04'
 
 variables:
   - group: 'AccessTokens'
-  - name: stackName
-    value: 'asizikov/infra/dev'
   - name: buildConfiguration
     value: 'Release'
   - name: appWorkingDir
@@ -20,15 +19,38 @@ stages:
       displayName: 'Prepare Azure infrastructure'
       jobs:
           - job: Infrastructure
+            variables:
+              stackName: 'asizikov/infra/feature'
             steps:
                 - checkout: self
                   displayName: 'Checkout code'
                   fetchDepth: 1
+                - task: PowerShell@2
+                  inputs:
+                    targetType: 'inline'
+                    script: |
+                      $branchSource = "$(Build.SourceBranch)"
+                      $tmpStackName = $branchSource -replace "refs/heads/", ""
+                      $tmpStackName = $tmpStackName -replace "/", "-"
+                      $tmpStackName = "asizikov/infra/" + $tmpStackName
+                      Write-Host $tmpStackName
+                      Write-Host "##vso[task.setvariable variable=stackName;]$tmpStackName"
+                    errorActionPreference: 'continue'
+                  displayName: 'Set up stack for feature branch'
+                  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/feature'))
                 - task: Pulumi@1
-                  displayName: 'Pulumi preview'
                   inputs:
                     azureSubscription: 'Service connection for Pulumi'
-                    command: 'preview'
+                    command: 'config'
+                    args: 'set --path azure:location westeurope'
+                    cwd: 'infra/'
+                    stack: '$(stackName)'
+                    createStack: true
+                - task: Pulumi@1
+                  inputs:
+                    azureSubscription: 'Service connection for Pulumi'
+                    command: 'config'
+                    args: 'set --path infra:suffix xcc'
                     cwd: 'infra/'
                     stack: '$(stackName)'
                 - task: Pulumi@1
@@ -44,6 +66,7 @@ stages:
                     echo "##vso[task.setvariable variable=FunctionAppName;isOutput=true]$(pulumi stack output --cwd 'infra/' FunctionAppName)"
                     echo "##vso[task.setvariable variable=FunctionStatingSlotName;isOutput=true]$(pulumi stack output --cwd 'infra/' FunctionStatingSlotName)"
                     echo "##vso[task.setvariable variable=StagingSlotUri;isOutput=true]$(pulumi stack output --cwd 'infra/' StagingSlotUri)"
+                    echo "##vso[task.setvariable variable=ResourceGroupName;isOutput=true]$(pulumi stack output --cwd 'infra/' ResourceGroupName)"
                   displayName: 'Set stack outputs as variables'
                   name: 'pulumi'
 
@@ -95,6 +118,7 @@ stages:
       variables:
        azureFunctionAppName: $[ stageDependencies.update_infrastructure.Infrastructure.outputs['pulumi.FunctionAppName'] ]
        stagingSlotName: $[ stageDependencies.update_infrastructure.Infrastructure.outputs['pulumi.FunctionStatingSlotName'] ]
+       resourceGroupName: $[ stageDependencies.update_infrastructure.Infrastructure.outputs['pulumi.ResourceGroupName'] ]
       condition: succeeded()
       jobs:
         - deployment: Deploy
@@ -111,7 +135,7 @@ stages:
                       appType: 'functionApp'
                       appName: '$(azureFunctionAppName)'
                       package: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
-                      resourceGroupName: 'rg-pulumi-training6fb83c8a'
+                      resourceGroupName: '$(resourceGroupName)'
                       slotName: '$(stagingSlotName)'
                       deployToSlotOrASE: true
                       deploymentMethod: 'auto'
@@ -145,6 +169,7 @@ stages:
         stagingSlotUri: $[ stageDependencies.update_infrastructure.Infrastructure.outputs['pulumi.StagingSlotUri'] ]
         azureFunctionAppName: $[ stageDependencies.update_infrastructure.Infrastructure.outputs['pulumi.FunctionAppName'] ]
         stagingSlotName: $[ stageDependencies.update_infrastructure.Infrastructure.outputs['pulumi.FunctionStatingSlotName'] ]
+        resourceGroupName: $[ stageDependencies.update_infrastructure.Infrastructure.outputs['pulumi.ResourceGroupName'] ]
       jobs:
         - job: swap
           steps:
@@ -153,5 +178,5 @@ stages:
                 azureSubscription: 'Service connection for Pulumi'
                 Action: 'Swap Slots'
                 WebAppName: '$(azureFunctionAppName)'
-                ResourceGroupName: 'rg-pulumi-training6fb83c8a'
+                ResourceGroupName: '$(resourceGroupName)'
                 SourceSlot: '$(stagingSlotName)'
