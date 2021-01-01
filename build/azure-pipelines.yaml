@@ -1,8 +1,11 @@
 name: 'Echo Function CI-CD Pipeline $(Date:yyyyMMdd)-$(Rev:rr)'
 
+pr: none
+
 trigger: 
   - main
   - feature/*
+  
 
 pool:
  vmImage: 'ubuntu-20.04'
