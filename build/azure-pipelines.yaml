@@ -43,9 +43,9 @@ stages:
                   inputs:
                     azureSubscription: 'Service connection for Pulumi'
                     command: 'stack'
-                    args: 'select $(stackName)'
+                    args: 'select asizikov/infra/feature-pr-provision'
                     cwd: 'infra/'
-                    stack: '$(stackName)'
+                    stack: 'asizikov/infra/feature-pr-provision'
                     createStack: true
                 - task: Pulumi@1
                   inputs:
