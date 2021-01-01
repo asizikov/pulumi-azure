@@ -39,6 +39,14 @@ stages:
                   displayName: 'Set up stack for feature branch'
                   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/feature'))
                 - task: Pulumi@1
+                  displayName: 'Create new Stack if needed'
+                  inputs:
+                    azureSubscription: 'Service connection for Pulumi'
+                    command: 'new'
+                    cwd: 'infra/'
+                    stack: '$(stackName)'
+                    createStack: true
+                - task: Pulumi@1
                   inputs:
                     azureSubscription: 'Service connection for Pulumi'
                     command: 'config'
