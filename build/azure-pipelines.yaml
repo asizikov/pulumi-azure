@@ -43,9 +43,9 @@ stages:
                   inputs:
                     azureSubscription: 'Service connection for Pulumi'
                     command: 'stack'
-                    args: 'init'
-                    cwd: 'infra/'
+                    args: 'select $(stackName)'
                     stack: '$(stackName)'
+                    cwd: 'infra/'
                     createStack: true
                 - task: Pulumi@1
                   inputs:
