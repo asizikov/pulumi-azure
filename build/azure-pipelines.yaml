@@ -20,7 +20,7 @@ stages:
       jobs:
           - job: Infrastructure
             variables:
-              stackName: 'asizikov/infra/feature'
+              stackName: 'dev'
             steps:
                 - checkout: self
                   displayName: 'Checkout code'
