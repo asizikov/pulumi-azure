@@ -42,7 +42,8 @@ stages:
                   displayName: 'Create new Stack if needed'
                   inputs:
                     azureSubscription: 'Service connection for Pulumi'
-                    command: 'new'
+                    command: 'stack'
+                    args: 'init'
                     cwd: 'infra/'
                     stack: '$(stackName)'
                     createStack: true
