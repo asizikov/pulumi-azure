@@ -1,8 +1,11 @@
 name: 'Echo Function CI-CD Pipeline $(Date:yyyyMMdd)-$(Rev:rr)'
 
+pr: none
+
 trigger: 
   - main
   - feature/*
+  
 
 pool:
  vmImage: 'ubuntu-20.04'
@@ -20,7 +23,7 @@ stages:
       jobs:
           - job: Infrastructure
             variables:
-              stackName: 'asizikov/infra/feature'
+              stackName: 'dev'
             steps:
                 - checkout: self
                   displayName: 'Checkout code'
@@ -32,12 +35,21 @@ stages:
                       $branchSource = "$(Build.SourceBranch)"
                       $tmpStackName = $branchSource -replace "refs/heads/", ""
                       $tmpStackName = $tmpStackName -replace "/", "-"
-                      $tmpStackName = "asizikov/infra/" + $tmpStackName
+                      $tmpStackName = $tmpStackName
                       Write-Host $tmpStackName
                       Write-Host "##vso[task.setvariable variable=stackName;]$tmpStackName"
                     errorActionPreference: 'continue'
                   displayName: 'Set up stack for feature branch'
                   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/feature'))
+                - task: Pulumi@1
+                  displayName: 'Create new Stack if needed'
+                  inputs:
+                    azureSubscription: 'Service connection for Pulumi'
+                    command: 'stack'
+                    args: 'select $(stackName)'
+                    cwd: 'infra/'
+                    stack: '$(stackName)'
+                    createStack: true
                 - task: Pulumi@1
                   inputs:
                     azureSubscription: 'Service connection for Pulumi'
