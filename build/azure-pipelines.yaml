@@ -45,7 +45,7 @@ stages:
                     command: 'stack'
                     args: 'select'
                     cwd: 'infra/'
-                    stack: 'blah'
+                    stack: '$(stackName)'
                     createStack: true
                 - task: Pulumi@1
                   inputs:
