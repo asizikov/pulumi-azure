@@ -1,3 +1,0 @@
-config:
-  azure:location: westeurope
-  infra:suffix: xcc
