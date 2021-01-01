@@ -45,6 +45,10 @@ class TrainingStack : Stack
             {
                 Http2Enabled = true,
                 ScmType = "VSTSRM"
+            },
+            AppSettings = new InputMap<string>
+            {
+                { "WEBSITE_RUN_FROM_PACKAGE", "1"}
             }
         });
 
@@ -60,7 +64,11 @@ class TrainingStack : Stack
             SiteConfig = new FunctionAppSlotSiteConfigArgs
             {
                 Http2Enabled = true,
-                ScmType = "VSTSRM"
+                ScmType = "VSTSRM",
+            },
+            AppSettings = new InputMap<string>
+            {
+                { "WEBSITE_RUN_FROM_PACKAGE", "1"}
             }
         });
         
