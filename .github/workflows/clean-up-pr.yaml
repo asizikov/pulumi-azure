@@ -5,9 +5,14 @@ on:
 
 jobs:
   clean:
+    if: github.event.ref_type == 'branch'
+    runs-on: ubuntu-latest
     name: 'Clean up Pulumi resources'
     steps:
       - name : 'Prepare stack name'
-        run: echo 'stack name'
+        run: |
+           deletedBranchName = ${{ github.event.ref }}
+           stackName = $deletedBranchName
+           echo $stackName
 
     
