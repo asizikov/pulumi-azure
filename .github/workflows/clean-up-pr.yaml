@@ -1,0 +1,13 @@
+name: 'Clean up resources provisioned for PR'
+
+on: 
+  delete
+
+jobs:
+  clean:
+    name: 'Clean up Pulumi resources'
+    steps:
+      - name : 'Prepare stack name'
+        run: echo 'stack name'
+
+    
