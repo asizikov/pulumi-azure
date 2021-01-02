@@ -11,8 +11,8 @@ jobs:
     steps:
       - name : 'Prepare stack name'
         run: |
-           deletedBranchName = ${{ github.event.ref }}
-           stackName = $deletedBranchName
+           deletedBranchName=${{ github.event.ref }}
+           stackName=${deletedBranchName//[\/]/-}
            echo $stackName
 
     
