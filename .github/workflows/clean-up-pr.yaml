@@ -9,6 +9,9 @@ jobs:
     runs-on: ubuntu-latest
     name: 'Clean up Pulumi resources'
     steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 1      
       - name : 'Prepare stack name'
         run: |
            deletedBranchName=${{ github.event.ref }}
