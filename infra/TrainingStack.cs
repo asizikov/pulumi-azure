@@ -1,4 +1,3 @@
-using System.Runtime.InteropServices;
 using Pulumi;
 using Pulumi.Azure.AppService;
 using Pulumi.Azure.AppService.Inputs;
@@ -8,7 +7,25 @@ using Pulumi.Azure.Storage;
 // ReSharper disable once CheckNamespace
 public class TrainingStack : Stack
 {
-    public TrainingStack()
+    public TrainingStack() : base(new StackOptions
+    {
+        ResourceTransformations =
+        {
+            args =>
+            {
+                var tagp = args.Args.GetType().GetProperty("Tags");
+                if (tagp is null)
+                {
+                    return null;
+                }
+                var tags = (InputMap<string>)tagp.GetValue(args.Args, null)!;
+                tags["ProvisionedBy"] = "Pulumi";
+             
+                tagp.SetValue(args.Args, tags, null);
+                return new ResourceTransformationResult(args.Args, args.Options);
+            }
+        }
+    })
     {
         var config = new Config();
         var suffix = config.Get("suffix");
@@ -91,7 +108,7 @@ public class TrainingStack : Stack
 
     [Output]
     public Output<string> FunctionStatingSlotName { get; set; }
-    
-    [Output]
+
+    [Output] 
     public Output<string> StagingSlotUri { get; set; }
 }
