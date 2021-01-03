@@ -20,4 +20,6 @@ There are two pipelines used for this project.
 
 ### Azure Pipelines
 
+Azure Pipelines is used to build and test the Azure Function code, compile and run Pulumi, deploy Function to Azure (staging slot), Verify that it's up and running and swap the slot to puduction.
+
 ![Pipeline](docs/pipeline.png)
