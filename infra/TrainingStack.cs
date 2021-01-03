@@ -6,7 +6,7 @@ using Pulumi.Azure.Core;
 using Pulumi.Azure.Storage;
 
 // ReSharper disable once CheckNamespace
-class TrainingStack : Stack
+public class TrainingStack : Stack
 {
     public TrainingStack()
     {
