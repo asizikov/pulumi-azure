@@ -30,7 +30,7 @@ public class TrainingStack : Stack
         var config = new Config();
         var suffix = config.Get("suffix");
 
-        var resourceGroup = new ResourceGroup("rg-pulumi-training");
+        var resourceGroup = new ResourceGroup($"rg-{suffix}-training");
 
         var plan = new Plan("service-plan-dynamic", new PlanArgs
         {

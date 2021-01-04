@@ -17,6 +17,8 @@ variables:
     value: '$(System.DefaultWorkingDirectory)/src/EchoFunction'
   - name: azureSubscriptionName
     value: 'Service connection for Pulumi'
+  - name: stackName
+    value: cdijkstra/pulumi/dev
 
 stages:
     - stage: update_infrastructure
