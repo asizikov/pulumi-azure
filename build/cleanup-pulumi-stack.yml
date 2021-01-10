@@ -4,5 +4,5 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- script: echo Hello, world!
+- script: echo Hello, world, Branch name is $(BRANCHNAME)!
   displayName: 'Run a one-line script'
