@@ -40,7 +40,7 @@ public class TrainingStack : Stack
             {
                 Tier = "Dynamic",
                 Size = "Y1"
-            }
+            },
         });
 
         var storageAccount = new Account("saechofunction", new AccountArgs
