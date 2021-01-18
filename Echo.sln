@@ -12,6 +12,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{FC57A7E4-9A80-4D15-B4C4-7A821E163C99}"
 	ProjectSection(SolutionItems) = preProject
 		build\azure-pipelines.yaml = build\azure-pipelines.yaml
+		build\cleanup-pulumi-stack.yml = build\cleanup-pulumi-stack.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{7A007FF3-6DF8-4573-8DAB-BCBE670132DB}"
