@@ -16,6 +16,7 @@ namespace EchoFunction.Api
         {
             log.LogInformation("Triggered");
             return Task.FromResult<IActionResult>(new OkObjectResult("Hello from Azure Function, Provisioned by Pulumi"));
+        
         }
     }
 }
